@@ -141,9 +141,29 @@ def urldecode(query, flatten_values=True, typed_values=True, \
     return query_params
 
 
+def arc4_encrypt(key, data):
+    """
+        Encrypts a body of text using Alleged-RC4 (Ron's Code 4) secret-key encryption.
+
+        key
+            secret key
+
+        data
+            data to encrypt
+    """
+    encryptor = ARC4.new(key)
+    return encryptor.encrypt(data)
+
+
 def arc4_decrypt(key, data):
     """
         Decrypts a body of text from Alleged-RC4 (Ron's Code 4) encrypted data.
+
+        key
+            secret key
+
+        data
+            data to decrypt
     """
     decryptor = ARC4.new(key)
     return decryptor.decrypt(data)
@@ -194,23 +214,9 @@ def get_ebs_request_parameters(encoded_data, encryption_key, flatten_values=True
     4.  The query string is then decoded into a key-value dictionary containing
         query parameters, which is then returned as the result of the function.
     """
-    cipher_text = decoder(transformation(encoded_data))
+    transformed_data = transformation(encoded_data)
+    cipher_text = decoder(transformed_data)
     query_string = arc4_decrypt(encryption_key, cipher_text)
     query_params = urldecode(query_string, flatten_values, typed_values)
     return query_params
-
-
-def main():
-    # Store this configuration in the datastore, never in your code.
-    # Use memcached for fast read-access to avoid hitting the datastore.
-    account_id = '2384'
-    secret_key = 'ebskey'
-
-    example_dr = """IXc9laP5EPzkG8rJUEkT9GPYZKb 340d1KINeq1DJAbrqc5GeRs3RVwRJ7YShbNZUyaxTmSW46lexsfKVHpZGaEckYB9n5xHvzoFUm9WU7C3Zs6VjHu125hgs12 1Ql5ikbYxNp4M9405id0 WGoo3a3Um6pCSGxHsvDbFVY4FjMIc/QajmES ZhD9RUNn7jfjLth7D179a99uCJlqLeqmWgTM3nILZcwZHDqUWGoYWYb8D4SBHgUupPF8yXSLe6hK0iZoYwd5BkV ujpqJBmlt8oZlTnzL6Fw4sTh3s9YckZQJSGCZ5kk13SccBonrx4mugpFJ3NGJcw1P1CWlSbD8CfrcfVtUFne1YkbhvvzG33w0pMdg0CzdksGoTa0K JYR73gMtNIC PLN8wx4dObf4KADjyFc/G17i7VIsyKI0SdY11VUEVL5JrKa1cBTziaYxlawWOyG0J0wblnZus7a8OVu04aX7g7FIWDXMDmBWsuyaBg5znjJj5At4Q0zdlIzrJ8iopQcaDICu2G5koJVv3HOaTigJ nXm7J6OzlZoY9Ke4eizkHXW8NWVMMrG/p YHLF9kRK1zHYuRBGS3HYOmjXwTW1qJ cTQ6zlXCUzjbZm7rzAHtmuaOWly0iN0kTM4mNY XziWeWyzeo0UjT7GC2ObGrRc4BVUW Fb/L9Zgx3aJMWQICzk1Hj78alALUqZJR8RafT7A=="""
-
-    flattened_params = get_ebs_request_parameters(example_dr, secret_key, flatten_values=True, typed_values=True)
-    print flattened_params
-
-if __name__ == '__main__':
-    main()
 
