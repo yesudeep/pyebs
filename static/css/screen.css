@@ -58,7 +58,7 @@ h1 {
 form.decorated-fields fieldset legend {
     font-weight: normal;
     font-size: 1.6em;
-    margin-top: 1.9em;
+    padding-top: 1.9em;
 }
 
 form.decorated-fields fieldset {
