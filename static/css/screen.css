@@ -55,6 +55,16 @@ h1 {
     border-bottom: 1px solid #b5b5b5;
 }
 
+form.decorated-fields fieldset legend {
+    font-weight: normal;
+    font-size: 1.6em;
+    border-bottom: 1px solid #b5b5b5;
+}
+
+form.decorated-fields fieldset {
+    border: 0;
+}
+
 form.decorated-fields span.suffix {
     font-family: "Georgia","Gentium",serif;
     display: block;

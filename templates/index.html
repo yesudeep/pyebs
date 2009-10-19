@@ -49,58 +49,116 @@ the <code>method</code> attribute is set to <code>POST</code>.</p>
     <textarea name="description" rows="8" cols="40" maxlength="255" class="required">{{ description }}</textarea>
     <span class="suffix"></span>
   </label>
+  <fieldset>
+    <legend>billing details</legend>
+    <label for="name">
+      <span class="prefix">name</span>
+      <input type="text" name="name" value="{{ full_name }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="name">
-    <span class="prefix">name</span>
-    <input type="text" name="name" value="{{ full_name }}" class="required capitalize" />
-    <span class="suffix"></span>
-  </label>
+    <label for="email">
+      <span class="prefix">email address</span>
+      <input type="text" name="email" value="{{ email }}" class="required email" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="email">
-    <span class="prefix">email address</span>
-    <input type="text" name="email" value="{{ email }}" class="required email" />
-    <span class="suffix"></span>
-  </label>
+    <label for="phone">
+      <span class="prefix">phone number</span>
+      <input type="text" name="phone" value="{{ phone_number }}" class="required phone" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="phone">
-    <span class="prefix">phone number</span>
-    <input type="text" name="phone" value="{{ phone_number }}" class="required phone" />
-    <span class="suffix"></span>
-  </label>
+    <label for="country">
+      <span class="prefix">country</span>
+      <select name="country" class="required">
+      {% for country in countries %}
+      <option value="{{ country.0 }}" {% ifequal country.0 country_code %}selected="selected"{% endifequal %}>{{ country.1 }}</option>
+      {% endfor %}
+      </select>
+      <span class="suffix">ISO 3166 Alpha-3 codes for countries.  The original pay.html file that comes with the EBS-distributed integration kit contains a few typos: <code>&lt;option value="NO"&gt;R Norway&lt;/option&gt;</code> and <code>&lt;option value="GI"&gt;N Guinea&lt;/option&gt;</code>.</span>
+    </label>
 
-  <label for="country">
-    <span class="prefix">country</span>
-    <select name="country" class="required">
-    {% for country in countries %}
-    <option value="{{ country.0 }}" {% ifequal country.0 country_code %}selected="selected"{% endifequal %}>{{ country.1 }}</option>
-    {% endfor %}
-    </select>
-    <span class="suffix">ISO 3166 Alpha-3 codes for countries.  The original pay.html file that comes with the EBS-distributed integration kit contains a few typos: <code>&lt;option value="NO"&gt;R Norway&lt;/option&gt;</code> and <code>&lt;option value="GI"&gt;N Guinea&lt;/option&gt;</code>.</span>
-  </label>
+    <label for="state">
+      <span class="prefix">state/province</span>
+      <input type="text" name="state" value="{{ state_province }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="state">
-    <span class="prefix">state/province</span>
-    <input type="text" name="state" value="{{ state_province }}" class="required capitalize" />
-    <span class="suffix"></span>
-  </label>
+    <label for="city">
+      <span class="prefix">city</span>
+      <input type="text" name="city" value="{{ city }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="city">
-    <span class="prefix">city</span>
-    <input type="text" name="city" value="{{ city }}" class="required capitalize" />
-    <span class="suffix"></span>
-  </label>
+    <label for="postal_code">
+      <span class="prefix">postal code</span>
+      <input type="text" name="postal_code" value="{{ postal_code }}" class="required" />
+      <span class="suffix"></span>
+    </label>
 
-  <label for="postal_code">
-    <span class="prefix">postal code</span>
-    <input type="text" name="postal_code" value="{{ postal_code }}" class="required" />
-    <span class="suffix"></span>
-  </label>
+    <label for="address">
+      <span class="prefix">postal address</span>
+      <textarea name="address" rows="8" cols="40" maxlength="255" class="required">{{ postal_address }}</textarea>
+      <span class="suffix"></span>
+    </label>
+  </fieldset>
 
-  <label for="address">
-    <span class="prefix">postal address</span>
-    <textarea name="address" rows="8" cols="40" maxlength="255" class="required">{{ postal_address }}</textarea>
-    <span class="suffix"></span>
-  </label>
+  <fieldset>
+    <legend>shipping details</legend>
+    <label for="ship_name">
+      <span class="prefix">name</span>
+      <input type="text" name="ship_name" value="{{ ship_full_name }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_email">
+      <span class="prefix">email address</span>
+      <input type="text" name="ship_email" value="{{ ship_email }}" class="required email" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_phone">
+      <span class="prefix">phone number</span>
+      <input type="text" name="ship_phone" value="{{ ship_phone_number }}" class="required phone" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_country">
+      <span class="prefix">country</span>
+      <select name="ship_country" class="required">
+      {% for country in countries %}
+      <option value="{{ country.0 }}" {% ifequal country.0 ship_country_code %}selected="selected"{% endifequal %}>{{ country.1 }}</option>
+      {% endfor %}
+      </select>
+      <span class="suffix">ISO 3166 Alpha-3 codes for countries.  The original pay.html file that comes with the EBS-distributed integration kit contains a few typos: <code>&lt;option value="NO"&gt;R Norway&lt;/option&gt;</code> and <code>&lt;option value="GI"&gt;N Guinea&lt;/option&gt;</code>.</span>
+    </label>
+
+    <label for="ship_state">
+      <span class="prefix">state/province</span>
+      <input type="text" name="ship_state" value="{{ ship_state_province }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_city">
+      <span class="prefix">city</span>
+      <input type="text" name="ship_city" value="{{ ship_city }}" class="required capitalize" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_postal_code">
+      <span class="prefix">postal code</span>
+      <input type="text" name="ship_postal_code" value="{{ ship_postal_code }}" class="required" />
+      <span class="suffix"></span>
+    </label>
+
+    <label for="ship_address">
+      <span class="prefix">postal address</span>
+      <textarea name="ship_address" rows="8" cols="40" maxlength="255" class="required">{{ ship_postal_address }}</textarea>
+      <span class="suffix"></span>
+    </label>
+  </fieldset>
+
 
   <label for="submit">
     <span class="prefix"></span>
