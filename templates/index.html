@@ -10,47 +10,51 @@
 the <code>method</code> attribute is set to <code>POST</code>.</p>
 
 <form id="form_payment" class="decorated-fields table" action="{{ ebs_secure_url }}" method="POST">
-  <label for="mode">
-    <span class="prefix">mode</span>
-    <select name="mode" class="required">
-      {% for mode in modes %}
-      <option value="{{ mode }}">{{ mode }}</option>
-      {% endfor %}
-    </select>
-    <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise.</span>
-  </label>
 
-  <label for="amount">
-    <span class="prefix">amount</span>
-    <input type="text" name="amount" value="{{ amount }}" class="required number currency" />
-    <span class="suffix">Indian Rupees</span>
-  </label>
-
-  <label for="return_url">
-    <span class="prefix">merchant return URL</span>
-    <input type="text" name="return_url" value="{{ billing_return_url }}" class="required" />
-    <span class="suffix">After processing, EBS redirects to <a id="display_return_url" href="#">{{ billing_return_url }}</a>.</span>
-  </label>
-
-  <label for="account_id">
-    <span class="prefix">account id</span>
-    <input type="text" name="account_id" value="{{ account_id }}" class="required digits" />
-    <span class="suffix">Merchant account identifier.</span>
-  </label>
-
-  <label for="reference_no">
-    <span class="prefix">reference number</span>
-    <input type="text" name="reference_no" value="{{ reference_number }}" class="required digits" />
-    <span class="suffix">Merchant-specific transaction reference number.</span>
-  </label>
-
-  <label for="description">
-    <span class="prefix">description</span>
-    <textarea name="description" rows="8" cols="40" maxlength="255" class="required">{{ description }}</textarea>
-    <span class="suffix"></span>
-  </label>
   <fieldset>
-    <legend>billing details</legend>
+    <legend>transaction</legend>
+    <label for="mode">
+      <span class="prefix">mode</span>
+      <select name="mode" class="required">
+        {% for mode in modes %}
+        <option value="{{ mode }}">{{ mode }}</option>
+        {% endfor %}
+      </select>
+      <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise.</span>
+    </label>
+
+    <label for="amount">
+      <span class="prefix">amount</span>
+      <input type="text" name="amount" value="{{ amount }}" class="required number currency" />
+      <span class="suffix">Indian Rupees</span>
+    </label>
+
+    <label for="return_url">
+      <span class="prefix">merchant return URL</span>
+      <input type="text" name="return_url" value="{{ billing_return_url }}" class="required" />
+      <span class="suffix">After processing, EBS redirects to <a id="display_return_url" href="#">{{ billing_return_url }}</a>.</span>
+    </label>
+
+    <label for="account_id">
+      <span class="prefix">account id</span>
+      <input type="text" name="account_id" value="{{ account_id }}" class="required digits" />
+      <span class="suffix">Merchant account identifier.</span>
+    </label>
+
+    <label for="reference_no">
+      <span class="prefix">reference number</span>
+      <input type="text" name="reference_no" value="{{ reference_number }}" class="required digits" />
+      <span class="suffix">Merchant-specific transaction reference number.</span>
+    </label>
+
+    <label for="description">
+      <span class="prefix">description</span>
+      <textarea name="description" rows="8" cols="40" maxlength="255" class="required">{{ description }}</textarea>
+      <span class="suffix"></span>
+    </label>
+  </fieldset>
+  <fieldset>
+    <legend>billing information</legend>
     <label for="name">
       <span class="prefix">name</span>
       <input type="text" name="name" value="{{ full_name }}" class="required capitalize" />
@@ -105,7 +109,7 @@ the <code>method</code> attribute is set to <code>POST</code>.</p>
   </fieldset>
 
   <fieldset>
-    <legend>shipping details</legend>
+    <legend>shipping information</legend>
     <label for="ship_name">
       <span class="prefix">name</span>
       <input type="text" name="ship_name" value="{{ ship_full_name }}" class="required capitalize" />
@@ -158,7 +162,6 @@ the <code>method</code> attribute is set to <code>POST</code>.</p>
       <span class="suffix"></span>
     </label>
   </fieldset>
-
 
   <label for="submit">
     <span class="prefix"></span>

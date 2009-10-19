@@ -58,11 +58,12 @@ h1 {
 form.decorated-fields fieldset legend {
     font-weight: normal;
     font-size: 1.6em;
-    border-bottom: 1px solid #b5b5b5;
+    margin-top: 1.9em;
 }
 
 form.decorated-fields fieldset {
     border: 0;
+    background-color: #f5f5f5;
 }
 
 form.decorated-fields span.suffix {
