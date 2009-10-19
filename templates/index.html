@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block tag_body %}
+<h1>Payment integration</h1>
+<p>You will need to send EBS a confirmation email to set mode to production once you have completed testing on your merchant Website.</p>
+<p>If you face problems with integration, you can submit tickets by sending email to <a href="mailto:{{ ebs_support_email }}">{{ ebs_support_email }}</a> or filling tickets directly using your tracker account at <a href="{{ ebs_support_url }}">{{ ebs_support_url }}</a>. I've found them to be excellent at support and they respond pretty quickly.</p>
+
+<h1>Example form</h1>
+<p>The <code>action</code> attribute of the <code>form</code> element is set to <code>{{ ebs_secure_url }}</code> and
+the <code>method</code> attribute is set to <code>POST</code>.</p>
+
+<form id="form_payment" class="decorated-fields table" action="{{ ebs_secure_url }}" method="POST">
+  <label for="mode">
+    <span class="prefix">mode</span>
+    <select name="mode" class="required">
+      {% for mode in modes %}
+      <option value="{{ mode }}">{{ mode }}</option>
+      {% endfor %}
+    </select>
+    <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise.</span>
+  </label>
+
+  <label for="amount">
+    <span class="prefix">amount</span>
+    <input type="text" name="amount" value="{{ amount }}" class="required number currency" />
+    <span class="suffix">Indian Rupees</span>
+  </label>
+
+  <label for="return_url">
+    <span class="prefix">merchant return URL</span>
+    <input type="text" name="return_url" value="{{ billing_return_url }}" class="required" />
+    <span class="suffix">After processing, EBS redirects to <a id="display_return_url" href="#">{{ billing_return_url }}</a>.</span>
+  </label>
+
+  <label for="account_id">
+    <span class="prefix">account id</span>
+    <input type="text" name="account_id" value="{{ account_id }}" class="required digits" />
+    <span class="suffix">Merchant account identifier.</span>
+  </label>
+
+  <label for="reference_no">
+    <span class="prefix">reference number</span>
+    <input type="text" name="reference_no" value="{{ reference_number }}" class="required digits" />
+    <span class="suffix">Merchant-specific transaction reference number.</span>
+  </label>
+
+  <label for="description">
+    <span class="prefix">description</span>
+    <textarea name="description" rows="8" cols="40" maxlength="255" class="required">{{ description }}</textarea>
+    <span class="suffix"></span>
+  </label>
+
+  <label for="name">
+    <span class="prefix">name</span>
+    <input type="text" name="name" value="{{ full_name }}" class="required capitalize" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="email">
+    <span class="prefix">email address</span>
+    <input type="text" name="email" value="{{ email }}" class="required email" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="phone">
+    <span class="prefix">phone number</span>
+    <input type="text" name="phone" value="{{ phone_number }}" class="required phone" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="country">
+    <span class="prefix">country</span>
+    <select name="country" class="required">
+    {% for country in countries %}
+    <option value="{{ country.0 }}" {% ifequal country.0 country_code %}selected="selected"{% endifequal %}>{{ country.1 }}</option>
+    {% endfor %}
+    </select>
+    <span class="suffix">ISO 3166 Alpha-3 codes for countries.  The original pay.html file that comes with the EBS-distributed integration kit contains a few typos: <code>&lt;option value="NO"&gt;R Norway&lt;/option&gt;</code> and <code>&lt;option value="GI"&gt;N Guinea&lt;/option&gt;</code>.</span>
+  </label>
+
+  <label for="state">
+    <span class="prefix">state/province</span>
+    <input type="text" name="state" value="{{ state_province }}" class="required capitalize" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="city">
+    <span class="prefix">city</span>
+    <input type="text" name="city" value="{{ city }}" class="required capitalize" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="postal_code">
+    <span class="prefix">postal code</span>
+    <input type="text" name="postal_code" value="{{ postal_code }}" class="required" />
+    <span class="suffix"></span>
+  </label>
+
+  <label for="address">
+    <span class="prefix">postal address</span>
+    <textarea name="address" rows="8" cols="40" maxlength="255" class="required">{{ postal_address }}</textarea>
+    <span class="suffix"></span>
+  </label>
+
+  <label for="submit">
+    <span class="prefix"></span>
+    <input type="submit" name="submit" value="&#10004; Make payment" />
+    <span class="suffix"></span>
+  </label>
+</form>
+{% endblock %}
+
+{% block tag_scripts %}
+<script src="{{ MEDIA_URL }}script/payment.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
