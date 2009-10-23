@@ -127,7 +127,7 @@ def urldecode(query, flatten_values=True, typed_values=True, \
     query_key_value_pairs = query.split(key_value_pair_separator)
     for s in query_key_value_pairs:
         if s.find(key_value_separator):
-            k, v = map(urllib.unquote, s.split(key_value_separator))
+            k, v = map(urllib.unquote_plus, s.split(key_value_separator))
             if typed_values:
                 v = typed_value_getter(v)
             try:
