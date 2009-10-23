@@ -32,7 +32,6 @@ from decimal import Decimal, InvalidOperation
 import re
 import urllib
 
-
 EBS_DATESTRING_RE = re.compile(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2}) (?P<hours>[0-9]{2}):(?P<minutes>[0-9]{2}):(?P<seconds>[0-9]{2}).*$')
 
 
