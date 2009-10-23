@@ -31,12 +31,13 @@ DEBUG = True
 
 # Store this configuration in the datastore, never in your code.
 # Use memcached for fast read-access to avoid hitting the datastore.
-EBS_ACCOUNT_ID = '2349'
+#EBS_ACCOUNT_ID = '2349'
+EBS_ACCOUNT_ID = '5880'
 EBS_SECRET_KEY = 'ebskey'
 
 # Enable the following secure URL for the actual integration.
-#EBS_SECURE_URL = 'https://secure.ebs.in/pg/ma/sale/pay/'
-EBS_SECURE_URL = '/ebs/'
+EBS_SECURE_URL = 'https://secure.ebs.in/pg/ma/sale/pay/'
+#EBS_SECURE_URL = '/ebs/'
 
 EBS_SUPPORT_EMAIL = 'support@ebs.in'
 EBS_SUPPORT_URL = 'http://support.ebs.in'

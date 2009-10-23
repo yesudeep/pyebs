@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Example usage for EBS using web.py
+# Example usage for EBS using Google App Engine SDK.
 # Copyright (C) 2009  Yesudeep Mangalapilly.
 #
 # The MIT License
@@ -34,7 +34,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from pprint import pformat
 from util import ebs_urlencode, render_template
-from models import MODES, COUNTRIES_TUPLE_MAP, TRANSACTION_DESCRIPTIONS, FULL_NAMES, EMAILS, STATES, CITIES, POSTAL_ADDRESSES
+from models import MODES, COUNTRIES_TUPLE_MAP, TRANSACTION_DESCRIPTIONS, \
+    FULL_NAMES, EMAILS, STATES, CITIES, POSTAL_ADDRESSES
 
 import logging
 import random
@@ -42,7 +43,6 @@ import random
 
 # Set up logging.
 logging.basicConfig(level=logging.DEBUG)
-
 
 class IndexHandler(webapp.RequestHandler):
     """
