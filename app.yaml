@@ -1,5 +1,5 @@
 application: example-application
-version: 1
+version: ebs
 runtime: python
 api_version: 1
 
@@ -15,6 +15,10 @@ handlers:
   static_dir: static
   secure: never
   expiration: 7d
+
+- url: /settings.*
+  script: api_settings.py
+  login: admin
 
 - url: /.*
   script: application.py
