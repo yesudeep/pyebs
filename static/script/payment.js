@@ -26,7 +26,10 @@
 jQuery(function(){
     var elements = {
         returnUrlField: jQuery('#form_payment input[name="return_url"]'),
-        returnUrlDisplay: jQuery('#display_return_url')
+        returnUrlDisplay: jQuery('#display_return_url'),
+        modeField: jQuery('#form_payment select[name="mode"]'),
+        modeDisplay: jQuery('#display_mode'),
+        accountIdField: jQuery('#form_payment input[name="account_id"]')
     };
 
     /*
@@ -36,5 +39,13 @@ jQuery(function(){
         elements.returnUrlDisplay.text(jQuery(this).val());
     }
     elements.returnUrlField.keyup(returnUrlFieldHandler).change(returnUrlFieldHandler);
+    
+    function onModeChanged(event){
+        jQuery.post('/update/mode', {mode: jQuery(this).val()}, function(data, textStatus){
+            elements.modeDisplay.text('Mode has been set to: ' + data.mode).css({display: 'block'});
+            elements.accountIdField.val(data.account_id);
+        }, 'json');
+    }
+    elements.modeField.change(onModeChanged);
 });
 

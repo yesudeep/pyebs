@@ -23,9 +23,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from ebs.merchant.data import MODE_PRODUCTION, MODE_DEVELOPMENT
+from google.appengine.api import memcache
+from google.appengine.ext import db
+
 MODES = [
-    'TEST',
-    'LIVE',
+    MODE_DEVELOPMENT,
+    MODE_PRODUCTION,
 ]
 
 TRANSACTION_DESCRIPTIONS = [
@@ -368,3 +372,34 @@ def compare_countries(c1, c2):
         return 0
 COUNTRIES_TUPLE_MAP.sort(cmp=compare_countries)
 
+# Models
+class BillingSettings(db.Model):
+    """
+    Billing settings for EBS.
+    """
+    mode = db.StringProperty(choices=MODES)
+    account_id = db.StringProperty()
+    secret_key = db.StringProperty()
+
+    @classmethod
+    def get_settings(cls, mode=MODE_PRODUCTION):
+        """
+        Given a deployment mode returns the first available settings object
+        for that mode.  When not given any arguments, it will attempt to 
+        return the production mode settings object.
+        """
+        cache_key = 'BillingSettings.get_settings: ' + mode
+        settings = memcache.get(cache_key)
+        if not settings:
+            settings = db.Query(BillingSettings).filter("mode =", mode).get()
+            if not settings:
+                settings = BillingSettings(mode=mode)
+                settings.put()
+            memcache.set(cache_key, settings, 1)
+        return settings
+
+class BillingTransaction(db.Model):
+    """
+    Transaction object that stores all responses obtained from EBS.
+    """
+    response = db.TextProperty()

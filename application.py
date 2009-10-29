@@ -29,28 +29,31 @@ import configuration
 from base64 import urlsafe_b64encode, b64encode
 from datetime import datetime
 from decimal import Decimal
-from ebs.merchant.api import get_ebs_request_parameters, arc4_encrypt
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from pprint import pformat
-from util import ebs_urlencode, render_template
+from util import ebs_urlencode, render_template, SessionRequestHandler
+from ebs.merchant.data import MODE_PRODUCTION, MODE_DEVELOPMENT
 from models import MODES, COUNTRIES_TUPLE_MAP, TRANSACTION_DESCRIPTIONS, \
-    FULL_NAMES, EMAILS, STATES, CITIES, POSTAL_ADDRESSES
+    FULL_NAMES, EMAILS, STATES, CITIES, POSTAL_ADDRESSES, BillingSettings
 
 import logging
 import random
 
-
 # Set up logging.
 logging.basicConfig(level=logging.DEBUG)
 
-class IndexHandler(webapp.RequestHandler):
+class IndexHandler(SessionRequestHandler):
     """
     Payment page handler.
     """
     def get(self):
+        mode = self.session['ebs_mode']
+        settings = BillingSettings.get_settings(mode=mode)
         rendered_response_text = render_template('index.html',
-            account_id=configuration.EBS_ACCOUNT_ID,
+            account_id=settings.account_id,
+            ebs_mode=mode,
+            default_ebs_secret_key=configuration.DEFAULT_EBS_SECRET_KEY,
             amount=Decimal(str(random.randint(1000, 40000)) + '.' + str(random.randint(10, 100))),
             billing_return_url=configuration.BILLING_RETURN_URL,
             countries=COUNTRIES_TUPLE_MAP,
@@ -79,11 +82,12 @@ class IndexHandler(webapp.RequestHandler):
             )
         self.response.out.write(rendered_response_text)
 
-class PaymentGatewayEmulationHandler(webapp.RequestHandler):
+class PaymentGatewayEmulationHandler(SessionRequestHandler):
     """
     Emulates the payment gateway to ease simple testing.
     """
     def post(self):
+        from ebs.merchant.api import arc4_encrypt
         return_url = self.request.get('return_url')
         now_string = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -118,13 +122,15 @@ class PaymentGatewayEmulationHandler(webapp.RequestHandler):
             'ResponseCode': 0,
             'ResponseMessage': 'Transaction Successful',
         }
+        
+        settings = BillingSettings.get_settings(mode=self.session['ebs_mode'])
         query_string = ebs_urlencode(dr)
-        cipher_text = arc4_encrypt(configuration.EBS_SECRET_KEY, query_string)
+        cipher_text = arc4_encrypt(settings.secret_key, query_string)
         encoded_data = b64encode(cipher_text).replace('+', ' ')
         return_url = return_url.replace('{DR}', encoded_data)
         self.redirect(return_url)
 
-class BillingHandler(webapp.RequestHandler):
+class BillingHandler(SessionRequestHandler):
     """
         Billing transaction response handler.
 
@@ -132,13 +138,33 @@ class BillingHandler(webapp.RequestHandler):
         successful transaction and record it such in the datastore.
     """
     def get(self):
+        from ebs.merchant.api import get_ebs_request_parameters
+        from models import BillingTransaction
+        mode = self.session['ebs_mode']
+        settings = BillingSettings.get_settings(mode=mode)
         dr = self.request.get('DR')
-        self.response.out.write(pformat(get_ebs_request_parameters(dr, configuration.EBS_SECRET_KEY)))
+        params = get_ebs_request_parameters(dr, settings.secret_key)
+        
+        transaction = BillingTransaction()
+        transaction.response = str(params)
+        transaction.put()
+        response = render_template('process.html', mode=mode, params=pformat(params, width=40))
+        self.response.out.write(response)
+
+class UpdateModeHandler(SessionRequestHandler):
+    def post(self):
+        from django.utils import simplejson as json
+        mode = self.request.get('mode')
+        self.session['ebs_mode'] = mode
+        settings = BillingSettings.get_settings(mode=mode)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(dict(mode=mode, account_id=settings.account_id)))
 
 urls = (
     ('/?', IndexHandler),
     ('/billing/?', BillingHandler),
     ('/ebs/?', PaymentGatewayEmulationHandler),
+    ('/update/mode?', UpdateModeHandler),
 )
 application = webapp.WSGIApplication(urls, debug=configuration.DEBUG)
 

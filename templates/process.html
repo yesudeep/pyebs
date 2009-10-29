@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block tag_body %}
+<h1>EBS Transaction Response.</h1>
+<p class="highlight">The {{ mode }} secret key was used for decryption.</p>
+<p>Try <a href="/">another transaction</a>.</p>
+<pre>
+{{ params|escape }}
+</pre>
+{% endblock %}

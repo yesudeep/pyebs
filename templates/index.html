@@ -8,6 +8,7 @@
 <h1>Example form</h1>
 <p>The <code>action</code> attribute of the <code>form</code> element is set to <code>{{ ebs_secure_url }}</code> and
 the <code>method</code> attribute is set to <code>POST</code>.</p>
+<p class="highlight">You need to <a target="_blank" href="/settings/billing/">edit your Account ID and secret keys</a> for development (test) and production (live) mode before making any transactions.</p>
 
 <form id="form_payment" class="decorated-fields table" action="{{ ebs_secure_url }}" method="POST">
 
@@ -15,12 +16,18 @@ the <code>method</code> attribute is set to <code>POST</code>.</p>
     <legend>transaction information</legend>
     <label for="mode">
       <span class="prefix">mode</span>
-      <select name="mode" class="required">
+      <select readonly="readonly" name="mode" class="required">
         {% for mode in modes %}
-        <option value="{{ mode }}">{{ mode }}</option>
+        <option value="{{ mode }}" {% ifequal mode ebs_mode %}selected="selected"{% endifequal %}>{{ mode }}</option>
         {% endfor %}
       </select>
-      <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise.</span>
+      <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise. <span class="highlight" id="display_mode"></span></span>
+    </label>
+
+    <label for="account_id">
+      <span class="prefix">account id</span>
+      <input type="text" readonly="readonly" name="account_id" value="{{ account_id }}" class="required digits" />
+      <span class="suffix">Merchant account identifier.</span>
     </label>
 
     <label for="amount">
@@ -35,11 +42,7 @@ the <code>method</code> attribute is set to <code>POST</code>.</p>
       <span class="suffix">After processing, EBS redirects to <a id="display_return_url" href="#">{{ billing_return_url }}</a>.</span>
     </label>
 
-    <label for="account_id">
-      <span class="prefix">account id</span>
-      <input type="text" name="account_id" value="{{ account_id }}" class="required digits" />
-      <span class="suffix">Merchant account identifier.</span>
-    </label>
+
 
     <label for="reference_no">
       <span class="prefix">reference number</span>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block tag_body %}
+<h1>Billing Settings</h1>
+<p>This page is only accessible to administrators.  You may edit your EBS Account ID and secret keys
+for each of the provided modes.</p>
+{% if settings_saved %}
+<p class="highlight">Your settings are saved.</p>
+{% endif %}
+<p><a href="{{ logout_url }}">Logout</a></p>
+<form id="form_billing_settings" class="decorated-fields table" action="/settings/billing/" method="POST" accept-charset="utf-8">
+	{% comment %}<fieldset>
+		<legend>Test Mode</legend>
+	    <label for="mode">
+	      <span class="prefix">mode</span>
+	      <select name="mode" class="required">
+	        {% for mode in modes %}
+	        <option value="{{ mode }}">{{ mode }}</option>
+	        {% endfor %}
+	      </select>
+	      <span class="suffix">Set this to 'LIVE' for production mode; 'TEST' otherwise.</span>
+	    </label>		
+	</fieldset>{% endcomment %}
+	
+	<fieldset>
+		<legend>Test Mode</legend>
+		<label for="test_account_id">
+			<span class="prefix">account id</span>
+			<input type="text" name="test_account_id" value="{% if test_settings.account_id %}{{ test_settings.account_id }}{% endif %}" class="required digits" />
+			<span class="suffix"></span>
+		</label>
+		<label for="test_secret_key">
+			<span class="prefix">secret key</span>
+			<input type="text" name="test_secret_key" value="{% if test_settings.secret_key %}{{ test_settings.secret_key }}{% else %}{{ default_ebs_secret_key }}{% endif %}" class="required" />
+			<span class="suffix"></span>
+		</label>
+	</fieldset>
+
+	<fieldset>
+		<legend>Production (Live) Mode</legend>
+		<label for="production_account_id">
+			<span class="prefix">account id</span>
+			<input type="text" name="production_account_id" value="{% if production_settings.account_id %}{{ production_settings.account_id }}{% endif %}" class="required digits" />
+			<span class="suffix"></span>
+		</label>
+		<label for="production_secret_key">
+			<span class="prefix">secret key</span>
+			<input type="text" name="production_secret_key" value="{% if production_settings.secret_key %}{{ production_settings.secret_key }}{% endif %}" class="required" />
+			<span class="suffix"></span>
+		</label>
+	</fieldset>
+	<label for="test_account_id">
+		<span class="prefix"></span>
+		<input type="submit" name="submit" value="Save Settings" />
+		<span class="suffix"></span>
+	</label>
+
+</form>
+{% endblock %}

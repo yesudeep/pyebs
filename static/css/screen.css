@@ -30,16 +30,29 @@ body {
 
 a:link, a:visited {
     color: cornflowerblue;
+    text-decoration: none;
 }
-
+.highlight {
+    background: #ffc;
+    color: #000;
+    padding: 10px;
+}
+#display_mode {
+    display: none;
+}
 p {
     line-height: 1.5;
     color: #333;
     width: 500px;
 }
 
-code {
+code, pre {
     font-family: "Monaco","Consolas","Anonymous","Andale Mono",monospace;
+}
+
+pre {
+    background-color: whitesmoke;
+    padding: 10px;
 }
 
 section {

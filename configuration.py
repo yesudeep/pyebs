@@ -30,11 +30,7 @@ from ebs.merchant import data
 # Debug mode.
 DEBUG = True
 
-# Store this configuration in the datastore, never in your code.
-# Use memcached for fast read-access to avoid hitting the datastore.
-#EBS_ACCOUNT_ID = '2349'
-EBS_ACCOUNT_ID = '5880'
-EBS_SECRET_KEY = 'ebskey'
+DEFAULT_EBS_SECRET_KEY = 'ebskey'
 
 # Enable the following secure URL for the actual integration.
 EBS_SECURE_URL = data.PAYMENT_GATEWAY_URL
@@ -49,9 +45,11 @@ SERVER_NAME = os.environ['SERVER_NAME']
 if SERVER_PORT and SERVER_PORT != '80':
     HOST_NAME = '%s:%s' % (SERVER_NAME, SERVER_PORT)
     MINIFIED = ''
+    EBS_MODE = data.MODE_DEVELOPMENT
 else:
     HOST_NAME = SERVER_NAME
     MINIFIED = '-min'
+    EBS_MODE = data.MODE_PRODUCTION
 
 # Media URL for use with templates.
 MEDIA_URL = "http://%s/s/" % (HOST_NAME, )
@@ -66,5 +64,6 @@ TEMPLATE_BUILTINS = {
     'TEMPLATE_DEBUG': DEBUG,
     'BILLING_RETURN_URL': BILLING_RETURN_URL,
     'MINIFIED': MINIFIED,
+    'EBS_MODE': EBS_MODE,
 }
 

@@ -5,10 +5,25 @@
 
 import configuration
 
+from google.appengine.ext import webapp
 from google.appengine.ext.webapp.template import render
 from urllib import urlencode, _is_unicode, quote as quote_plus
-
+from appengine_utilities.sessions import Session
 import sys
+
+
+class SessionRequestHandler(webapp.RequestHandler):
+    """
+    A SessionRequestHandler handler contains information about
+    the current session.  It depends on the appengine_utilities.sessions
+    package to maintain a session.
+    """
+    def __init__(self):
+        webapp.RequestHandler.__init__(self)
+        self.session = Session()
+        if not 'ebs_mode' in self.session:
+            self.session['ebs_mode'] = configuration.EBS_MODE
+
 
 def render_template(template_name, **values):
     """
@@ -17,6 +32,7 @@ def render_template(template_name, **values):
     context = configuration.TEMPLATE_BUILTINS
     context.update(values)
     return render('templates/' + template_name, context)
+
 
 def ebs_urlencode(query,doseq=0):
     """Encode a sequence of two-element tuples or dictionary into a URL query string.
