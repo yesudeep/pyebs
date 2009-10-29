@@ -395,7 +395,7 @@ class BillingSettings(db.Model):
             if not settings:
                 settings = BillingSettings(mode=mode)
                 settings.put()
-            memcache.set(cache_key, settings, 1)
+            memcache.set(cache_key, settings, 120)
         return settings
 
 class BillingTransaction(db.Model):
