@@ -164,7 +164,7 @@ urls = (
     ('/?', IndexHandler),
     ('/billing/?', BillingHandler),
     ('/ebs/?', PaymentGatewayEmulationHandler),
-    ('/update/mode?', UpdateModeHandler),
+    ('/update/mode/?', UpdateModeHandler),
 )
 application = webapp.WSGIApplication(urls, debug=configuration.DEBUG)
 
